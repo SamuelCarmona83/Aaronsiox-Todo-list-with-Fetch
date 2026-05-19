@@ -1,0 +1,149 @@
+import React, { useState, useEffect } from "react";
+import TaskItem from "./TaskItem";
+
+
+const TaskList = () => {
+  const [tasks, setTasks] = useState([]);
+  const [newTask, setNewTask] = useState("");
+
+  const addTask = (e) => {
+    let isValidTask = e.key === "Enter" && newTask.trim() !== "";
+
+    if (isValidTask) {
+      fetch("https://playground.4geeks.com/todo/todos/MrCarmona", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          label: newTask,
+          is_done: false,
+        }),
+      })
+        .then(resp => {
+          return resp.json();
+        })
+        .then(createdTask => {
+          setNewTask("");
+          listTasks();
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+  };
+
+  const deleteTask = (id) => {
+    fetch(`https://playground.4geeks.com/todo/todos/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then(resp => {
+        if (resp.ok) {
+          listTasks();
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+  const amountItemsLeft = tasks.length;
+  const itemsLeft = amountItemsLeft === 1 ? "Tarea restante" : "Tareas restantes";
+
+  const itemsLabel = `${amountItemsLeft} ${itemsLeft}`;
+
+  const createUser = async () => {
+    let resp = await fetch(
+      "https://playground.4geeks.com/todo/users/MrCarmona",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({}),
+      },
+    );
+    let data = await resp.json();
+
+    if (resp.ok) {
+      await listTasks();
+    }
+  };
+
+  const listTasks = () => {
+    fetch("https://playground.4geeks.com/todo/users/MrCarmona", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((resp) => {
+        if (!resp.ok) {
+          createUser();
+          throw new Error("El usuario no esta creado en la API");
+        }
+
+        return resp.json();
+      })
+      .then((fetchTasks) => {
+        setTasks(fetchTasks.todos);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    listTasks();
+  }, []);
+
+  return (
+    <div className="container mt-5">
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <div className="card shadow">
+            <div className="card-header bg-secondary text-white text-center">
+              <h4>Todo List</h4>
+            </div>
+            <div className="card-body">
+              <input
+                type="text"
+                className="form-control mb-3"
+                placeholder="Añadir tareas..."
+                value={newTask}
+                onChange={(e) => setNewTask(e.target.value)}
+                onKeyPress={addTask}
+              />
+              {tasks.length === 0 ? (
+                <div className="text-center text-muted">
+                  <p>
+                    <strong>No hay tareas, añadir tareas</strong>
+                  </p>
+                </div>
+              ) : (
+                <ul className="list-group">
+                  {tasks.map(task => (
+                    <TaskItem
+                      key={task.id}
+                      text={task.label}
+                      id={task.id}
+                      onDelete={deleteTask}
+                    />
+                  ))}
+                </ul>
+              )}
+            </div>
+            <div className="card-footer text-muted text-center">
+              {itemsLabel}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default TaskList;
