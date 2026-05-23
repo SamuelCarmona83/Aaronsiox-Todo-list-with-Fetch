@@ -1,9 +1,9 @@
 :root {
+ --form-header-background: #6c757d;
  --form-max-width: 40rem;
  --form-horizontal-padding: clamp(1rem, 3vw, 1.75rem);
  --form-vertical-padding: clamp(1rem, 2.5vw, 1.5rem);
  --form-radius: 0.5rem;
- --form-header-bg: #6c757d;
  --form-input-height: 2.75rem;
  --form-gap: 1rem;
 }
@@ -24,7 +24,7 @@
 }
 
 .app-form-shell-header {
- background-color: var(--form-header-bg);
+ background-color: var(--form-header-background);
 }
 
 .app-form-shell-body {
@@ -43,6 +43,12 @@
 
 .app-form-submit {
  min-height: var(--form-input-height);
+}
+
+.app-form-feedback {
+ margin: 0 0 0.75rem;
+ color: #dc3545;
+ font-size: 0.875rem;
 }
 
 .app-form-empty-state {

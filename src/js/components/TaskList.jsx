@@ -5,6 +5,7 @@ import TaskItem from "./TaskItem";
 const TaskList = () => {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState("");
+  const [submitError, setSubmitError] = useState("");
 
   const addTask = () => {
     if (newTask.trim() === "") return;
@@ -21,15 +22,17 @@ const TaskList = () => {
     })
       .then(resp => {
         if (!resp.ok) {
-          throw new Error("No se pudo crear la tarea");
+          throw new Error(`No se pudo crear la tarea (${resp.status} ${resp.statusText})`);
         }
         return resp.json();
       })
       .then(() => {
+        setSubmitError("");
         setNewTask("");
         listTasks();
       })
       .catch(error => {
+        setSubmitError(error.message);
         console.error(error);
       });
   };
@@ -120,12 +123,18 @@ const TaskList = () => {
                   className="form-control app-form-control"
                   placeholder="Añadir tareas..."
                   value={newTask}
-                  onChange={(e) => setNewTask(e.target.value)}
+                  onChange={(e) => {
+                    setNewTask(e.target.value);
+                    if (submitError) setSubmitError("");
+                  }}
                 />
                 <button type="submit" className="btn btn-secondary app-form-submit">
                   Añadir tarea
                 </button>
               </form>
+              {submitError && (
+                <p className="app-form-feedback" role="alert">{submitError}</p>
+              )}
               {tasks.length === 0 ? (
                 <div className="text-center text-muted app-form-empty-state">
                   <p>
