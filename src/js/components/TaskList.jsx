@@ -107,7 +107,11 @@ const TaskList = () => {
   return (
     <div className="app-page">
       <div className="app-page-content">
-        <section className="app-form-shell card shadow" aria-labelledby="todo-list-title">
+        <section
+          className="app-form-shell card shadow"
+          aria-labelledby="todo-list-title"
+          aria-label="Formulario de tareas"
+        >
             <div className="card-header app-form-shell-header text-white text-center">
               <h4 id="todo-list-title">Todo List</h4>
             </div>
@@ -136,7 +140,7 @@ const TaskList = () => {
               {tasks.length === 0 ? (
                 <div className="text-center text-muted app-form-empty-state">
                   <p>
-                    <strong>No hay tareas, añadir tareas</strong>
+                    <strong>No hay tareas, añade tareas</strong>
                   </p>
                 </div>
               ) : (
