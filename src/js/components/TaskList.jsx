@@ -104,11 +104,6 @@ const TaskList = () => {
     listTasks();
   }, []);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    addTask();
-  };
-
   return (
     <div className="app-page">
       <div className="app-page-content">
@@ -117,7 +112,10 @@ const TaskList = () => {
               <h4 id="todo-list-title">Todo List</h4>
             </div>
             <div className="card-body app-form-shell-body">
-              <form className="app-form" onSubmit={handleSubmit}>
+              <form className="app-form" onSubmit={(event) => {
+                event.preventDefault();
+                addTask();
+              }}>
                 <input
                   type="text"
                   className="form-control app-form-control"

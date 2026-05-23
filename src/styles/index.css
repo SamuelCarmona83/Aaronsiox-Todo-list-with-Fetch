@@ -6,6 +6,7 @@
  --form-radius: 0.5rem;
  --form-input-height: 2.75rem;
  --form-gap: 1rem;
+ --task-delete-font-size: 0.8125rem;
 }
 
 .app-page {
@@ -56,7 +57,7 @@
 }
 
 .task-delete-btn {
- font-size: 13px;
+ font-size: var(--task-delete-font-size);
  min-width: 2rem;
  min-height: 2rem;
 }
