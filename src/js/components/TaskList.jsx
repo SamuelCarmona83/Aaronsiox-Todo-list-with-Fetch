@@ -100,25 +100,32 @@ const TaskList = () => {
     listTasks();
   }, []);
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    addTask({ key: "Enter" });
+  };
+
   return (
-    <div className="container mt-5">
-      <div className="row justify-content-center">
-        <div className="col-md-6">
-          <div className="card shadow">
-            <div className="card-header bg-secondary text-white text-center">
+    <div className="app-page">
+      <div className="app-page-content">
+        <section className="app-form-shell card shadow">
+            <div className="card-header app-form-shell-header text-white text-center">
               <h4>Todo List</h4>
             </div>
-            <div className="card-body">
-              <input
-                type="text"
-                className="form-control mb-3"
-                placeholder="Añadir tareas..."
-                value={newTask}
-                onChange={(e) => setNewTask(e.target.value)}
-                onKeyPress={addTask}
-              />
+            <div className="card-body app-form-shell-body">
+              <form className="app-form" onSubmit={handleSubmit}>
+                <input
+                  type="text"
+                  className="form-control app-form-control"
+                  placeholder="Añadir tareas..."
+                  value={newTask}
+                  onChange={(e) => setNewTask(e.target.value)}
+                  onKeyDown={addTask}
+                />
+                <button type="submit" className="visually-hidden">Guardar tarea</button>
+              </form>
               {tasks.length === 0 ? (
-                <div className="text-center text-muted">
+                <div className="text-center text-muted app-form-empty-state">
                   <p>
                     <strong>No hay tareas, añadir tareas</strong>
                   </p>
@@ -139,8 +146,7 @@ const TaskList = () => {
             <div className="card-footer text-muted text-center">
               {itemsLabel}
             </div>
-          </div>
-        </div>
+        </section>
       </div>
     </div>
   );

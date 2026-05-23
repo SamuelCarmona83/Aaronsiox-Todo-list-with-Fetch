@@ -1,11 +1,58 @@
-/* 
+:root {
+ --form-max-width: 40rem;
+ --form-horizontal-padding: clamp(1rem, 3vw, 1.75rem);
+ --form-vertical-padding: clamp(1rem, 2.5vw, 1.5rem);
+ --form-radius: 0.5rem;
+ --form-header-bg: #6c757d;
+ --form-input-height: 2.75rem;
+ --form-gap: 1rem;
+}
 
-    You can write your own styles here...
-    
-    
-    ...Or you can use the import command to include 
-    other sylesheets into your bunde as well, e.j:
-    
-    import 'relative/path/to/stylesheet.scss';
+.app-page {
+ min-height: 100vh;
+ padding: clamp(1rem, 4vw, 3rem) 1rem;
+}
 
-*/
+.app-page-content {
+ max-width: var(--form-max-width);
+ margin: 0 auto;
+}
+
+.app-form-shell {
+ border-radius: var(--form-radius);
+ overflow: hidden;
+}
+
+.app-form-shell-header {
+ background-color: var(--form-header-bg);
+}
+
+.app-form-shell-body {
+ padding: var(--form-vertical-padding) var(--form-horizontal-padding);
+}
+
+.app-form {
+ display: grid;
+ gap: var(--form-gap);
+ margin-bottom: 0.75rem;
+}
+
+.app-form-control {
+ min-height: var(--form-input-height);
+}
+
+.app-form-empty-state {
+ margin-top: 0.5rem;
+}
+
+.task-delete-btn {
+ font-size: 13px;
+ min-width: 2rem;
+ min-height: 2rem;
+}
+
+@media (max-width: 576px) {
+ .app-page {
+   padding-top: 1rem;
+ }
+}
