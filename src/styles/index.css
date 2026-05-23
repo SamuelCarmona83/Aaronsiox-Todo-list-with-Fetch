@@ -41,6 +41,10 @@
  min-height: var(--form-input-height);
 }
 
+.app-form-submit {
+ min-height: var(--form-input-height);
+}
+
 .app-form-empty-state {
  margin-top: 0.5rem;
 }

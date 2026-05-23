@@ -6,31 +6,29 @@ const TaskList = () => {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState("");
 
-  const addTask = (e) => {
-    let isValidTask = e.key === "Enter" && newTask.trim() !== "";
+  const addTask = () => {
+    if (newTask.trim() === "") return;
 
-    if (isValidTask) {
-      fetch("https://playground.4geeks.com/todo/todos/MrCarmona", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          label: newTask,
-          is_done: false,
-        }),
+    fetch("https://playground.4geeks.com/todo/todos/MrCarmona", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        label: newTask,
+        is_done: false,
+      }),
+    })
+      .then(resp => {
+        return resp.json();
       })
-        .then(resp => {
-          return resp.json();
-        })
-        .then(createdTask => {
-          setNewTask("");
-          listTasks();
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    }
+      .then(() => {
+        setNewTask("");
+        listTasks();
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
 
   const deleteTask = (id) => {
@@ -102,7 +100,7 @@ const TaskList = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    addTask({ key: "Enter" });
+    addTask();
   };
 
   return (
@@ -120,9 +118,10 @@ const TaskList = () => {
                   placeholder="Añadir tareas..."
                   value={newTask}
                   onChange={(e) => setNewTask(e.target.value)}
-                  onKeyDown={addTask}
                 />
-                <button type="submit" className="visually-hidden">Guardar tarea</button>
+                <button type="submit" className="btn btn-secondary app-form-submit">
+                  Añadir tarea
+                </button>
               </form>
               {tasks.length === 0 ? (
                 <div className="text-center text-muted app-form-empty-state">
