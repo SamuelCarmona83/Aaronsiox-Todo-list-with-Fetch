@@ -20,6 +20,9 @@ const TaskList = () => {
       }),
     })
       .then(resp => {
+        if (!resp.ok) {
+          throw new Error("No se pudo crear la tarea");
+        }
         return resp.json();
       })
       .then(() => {
@@ -106,9 +109,9 @@ const TaskList = () => {
   return (
     <div className="app-page">
       <div className="app-page-content">
-        <section className="app-form-shell card shadow">
+        <section className="app-form-shell card shadow" aria-labelledby="todo-list-title">
             <div className="card-header app-form-shell-header text-white text-center">
-              <h4>Todo List</h4>
+              <h4 id="todo-list-title">Todo List</h4>
             </div>
             <div className="card-body app-form-shell-body">
               <form className="app-form" onSubmit={handleSubmit}>
