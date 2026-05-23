@@ -5,32 +5,36 @@ import TaskItem from "./TaskItem";
 const TaskList = () => {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState("");
+  const [submitError, setSubmitError] = useState("");
 
-  const addTask = (e) => {
-    let isValidTask = e.key === "Enter" && newTask.trim() !== "";
+  const addTask = () => {
+    if (newTask.trim() === "") return;
 
-    if (isValidTask) {
-      fetch("https://playground.4geeks.com/todo/todos/MrCarmona", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          label: newTask,
-          is_done: false,
-        }),
+    fetch("https://playground.4geeks.com/todo/todos/MrCarmona", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        label: newTask,
+        is_done: false,
+      }),
+    })
+      .then(resp => {
+        if (!resp.ok) {
+          throw new Error(`No se pudo crear la tarea (${resp.status} ${resp.statusText})`);
+        }
+        return resp.json();
       })
-        .then(resp => {
-          return resp.json();
-        })
-        .then(createdTask => {
-          setNewTask("");
-          listTasks();
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    }
+      .then(() => {
+        setSubmitError("");
+        setNewTask("");
+        listTasks();
+      })
+      .catch(error => {
+        setSubmitError(error.message);
+        console.error(error);
+      });
   };
 
   const deleteTask = (id) => {
@@ -101,26 +105,42 @@ const TaskList = () => {
   }, []);
 
   return (
-    <div className="container mt-5">
-      <div className="row justify-content-center">
-        <div className="col-md-6">
-          <div className="card shadow">
-            <div className="card-header bg-secondary text-white text-center">
-              <h4>Todo List</h4>
+    <div className="app-page">
+      <div className="app-page-content">
+        <section
+          className="app-form-shell card shadow"
+          aria-labelledby="todo-list-title"
+          aria-label="Formulario de tareas"
+        >
+            <div className="card-header app-form-shell-header text-white text-center">
+              <h4 id="todo-list-title">Todo List</h4>
             </div>
-            <div className="card-body">
-              <input
-                type="text"
-                className="form-control mb-3"
-                placeholder="Añadir tareas..."
-                value={newTask}
-                onChange={(e) => setNewTask(e.target.value)}
-                onKeyPress={addTask}
-              />
+            <div className="card-body app-form-shell-body">
+              <form className="app-form" onSubmit={(event) => {
+                event.preventDefault();
+                addTask();
+              }}>
+                <input
+                  type="text"
+                  className="form-control app-form-control"
+                  placeholder="Añadir tareas..."
+                  value={newTask}
+                  onChange={(e) => {
+                    setNewTask(e.target.value);
+                    if (submitError) setSubmitError("");
+                  }}
+                />
+                <button type="submit" className="btn btn-secondary app-form-submit">
+                  Añadir tarea
+                </button>
+              </form>
+              {submitError && (
+                <p className="app-form-feedback" role="alert">{submitError}</p>
+              )}
               {tasks.length === 0 ? (
-                <div className="text-center text-muted">
+                <div className="text-center text-muted app-form-empty-state">
                   <p>
-                    <strong>No hay tareas, añadir tareas</strong>
+                    <strong>No hay tareas, añade tareas</strong>
                   </p>
                 </div>
               ) : (
@@ -139,8 +159,7 @@ const TaskList = () => {
             <div className="card-footer text-muted text-center">
               {itemsLabel}
             </div>
-          </div>
-        </div>
+        </section>
       </div>
     </div>
   );

@@ -13,9 +13,8 @@ const TaskItem = (taskprops) => {
 
       {hover && (
         <button
-          className="btn btn-danger btn-sm p-0"
+          className="btn btn-danger btn-sm p-0 task-delete-btn"
           onClick={() => taskprops.onDelete(taskprops.id)}
-          style={{ fontSize: "13px" }}
         >
           <i className="fa-solid fa-trash-can"></i>
         </button>
